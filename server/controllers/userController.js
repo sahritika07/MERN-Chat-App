@@ -60,3 +60,7 @@ export const login = async (req,res) =>{
     
 
 }
+
+
+
+// Controller to check if user is authenticated 
