@@ -1,5 +1,5 @@
 import { generateToken } from "../lib/utils.js";
-import User from "../models/User";
+import User from "../models/User.js";
 import cloudinary from "../lib/cloudinary.js"
 
 // Signup a new user

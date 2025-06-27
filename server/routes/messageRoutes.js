@@ -3,8 +3,8 @@ import express from "express";
 const messageRouter = express.Router()
 
 
-import { getMessages,getUsersForSidebar, markMessageAsSeen, sendMessage } from "../controllers/messageController";
-import { protectRoute } from "../middleware/auth";
+import { getMessages,getUsersForSidebar, markMessageAsSeen, sendMessage } from "../controllers/messageController.js";
+import { protectRoute } from "../middleware/auth.js";
 
 const messageRoute = express.Router();
 
