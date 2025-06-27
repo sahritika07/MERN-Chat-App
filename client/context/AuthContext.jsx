@@ -31,7 +31,35 @@ export const AuthProvider=({children})=>{
 
     // Login function to handle user authentication and socket connection
 
-    
+    const login = async(state, credentials)=>{
+        try {
+            const {data} = await axios.post(`/api/auth/${state}`, credentials);
+            if(data.success){
+                setAuthUser(data.userData);
+                connectSocket(data.userData);
+                axios.defaults.headers.common["token"] = data.token;
+                setToken(data.token);
+                localStorage.setItem("token", data.token)
+                toast.success(data.message)
+            }else{
+                toast.error(error.message)
+            }
+        } catch (error) {
+            toast.error(error.message)
+        }
+    }
+
+    // Logout function to handle user logout and socket disconnection
+
+    const logout = async() =>{
+        localStorage.removeItem("token");
+        setToken(null);
+        setAuthUser(null)
+        setOnlineUsers([]);
+        axios.defaults.headers.common["token"] = null;
+        toast.success("Logged out successfully")
+        socket.disconnect();
+    }
 
     // Connect socket function to handle socket connection and online users updates
 
