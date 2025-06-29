@@ -14,9 +14,12 @@ export const getUsersForSidebar = async(req,res) =>{
         const unseenMessages = {}
         const promises = filteredUsers.map(async (user)=>{
             const messages = await Message.find({senderId: user._id, receiverId: userId, seen:false})
+                                         //         49- 5 = 44                  1            2
             // senderId is the current user in the loop.   receiverId is the logged-in user.
             if(messages.length > 0){
                 unseenMessages[user.id] = messages.length;
+                //    id:value
+                //    id:value
             }
 
         })
@@ -33,11 +36,11 @@ export const getUsersForSidebar = async(req,res) =>{
 
 export const getMessages = async(req,res)=>{
     try {
-       const {id: selectedUserId}= req.params; 
+       const {selectedUserId}= req.params.id;    
        const myId = req.user._id;
        const messages = await Message.find({
-        $or: [{senderId: myId, receiverId: selectedUserId},
-        {senderId: selectedUserId, receiverId: myId}
+        $or: [{senderId: myId, receiverId: selectedUserId}, 
+        {senderId: selectedUserId, receiverId: myId} 
         ]
 
        })
