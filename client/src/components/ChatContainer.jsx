@@ -22,6 +22,7 @@ const ChatContainer = () => {
       setInput("")
   }
 
+  // Handling Image
   const handleSendImage = async(e) =>{
     const file = e.target.files[0];
     if(!file || !file.type.startsWith("image/")){
