@@ -89,14 +89,16 @@ export const AuthProvider=({children})=>{
         newSocket.connect()
         setSocket(newSocket);
         // Get Online Users
-        newSocket.on("getOnlineUsers", ()=>{
+        newSocket.on("getOnlineUsers", (userIds)=>{
             setOnlineUsers(userIds);
         })
     }
 
     useEffect(() => {
       if(token){
-         axios.defaults.headers.common["token"] = token;
+         axios.defaults.headers.common["token"] = token;  // token added for all the api request made using axios when the token is available in local storage
+         
+        
       }
       checkAuth()
     }, [])
