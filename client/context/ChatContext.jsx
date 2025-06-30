@@ -49,6 +49,7 @@ export const ChatProvider =({children}) =>{
             const {data} = await axios.post(`/api/messages/send/${selectedUser._id}`, messageData);
             if(data.success){
                 setMessages((prevMessages)=> [...prevMessages, data.newMessage])
+                getUsers(); 
             }else{
                 toast.error(data.message)
             }
@@ -74,6 +75,7 @@ export const ChatProvider =({children}) =>{
                   ...prevUnseenMessages, [newMessage.senderId] : prevUnseenMessages[newMessage.senderId] ? prevUnseenMessages[newMessage.senderId] + 1 : 1
                }))
             }
+             getUsers();
         })
     }
 
@@ -93,7 +95,7 @@ export const ChatProvider =({children}) =>{
     
 
     const value = {
-        messages, users, selectedUser, getUsers, setMessages, sendMessage, setSelectedUser, unseenMessages, setUnseenMessages
+        messages, users, selectedUser, getUsers, getMessages, sendMessage, setSelectedUser, unseenMessages, setUnseenMessages
         
     }
     return <ChatContext.Provider value={value}>

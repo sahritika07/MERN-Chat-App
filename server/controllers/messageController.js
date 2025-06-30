@@ -34,24 +34,30 @@ export const getUsersForSidebar = async(req,res) =>{
 
 // Get all messages for selected user
 
-export const getMessages = async(req,res)=>{
+export const getMessages = async (req, res) => {
     try {
-       const {selectedUserId}= req.params.id;    
-       const myId = req.user._id;
-       const messages = await Message.find({
-        $or: [{senderId: myId, receiverId: selectedUserId}, 
-        {senderId: selectedUserId, receiverId: myId} 
-        ]
+        const selectedUserId = req.params.id;
+        const myId = req.user._id;
 
-       })
-       await Message.updateMany({senderId: selectedUserId, receiverId: myId}, {seen:true} )
-       res.json({success: true, messages})
+        const messages = await Message.find({
+            $or: [
+                { senderId: myId, receiverId: selectedUserId },
+                { senderId: selectedUserId, receiverId: myId }
+            ]
+        }).sort({ createdAt: 1 }); // ✅ Add sorting for consistent order
 
+        await Message.updateMany(
+            { senderId: selectedUserId, receiverId: myId },
+            { seen: true }
+        );
+
+        res.json({ success: true, messages });
     } catch (error) {
-        console.log(error.message)
-        res.json({success: false, message: error.message})
+        console.log(error.message);
+        res.json({ success: false, message: error.message });
     }
 }
+
 
 // api to mark message as seen using message id
 
@@ -78,7 +84,7 @@ export const sendMessage = async (req, res) =>{
            const uploadResponse = await cloudinary.uploader.upload(image)
            imageUrl = uploadResponse.secure_url;
         }
-        const newMessage = Message.create({
+        const newMessage = await Message.create({
             senderId,
             receiverId,
             text,
@@ -87,9 +93,12 @@ export const sendMessage = async (req, res) =>{
 
         //Emit the new message to the receiver's socket
         const receiverSocketId = userSocketMap[receiverId];
-        if(receiverSocketId){
-            io.to(receiverSocketId).emit("newMessage", newMessage)
-        }
+        // if(receiverSocketId){
+        //     io.to(receiverSocketId).emit("newMessage", newMessage)
+        // }
+        if (receiverSocketId) {
+    io.to(receiverSocketId).emit("newMessage", newMessage);
+}
 
         res.json({success: true, newMessage});
 
