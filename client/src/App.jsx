@@ -3,7 +3,7 @@ import { Navigate, Route, Routes } from 'react-router-dom'
 import HomePage from './pages/HomePage'
 import Loginpage from './pages/Loginpage'
 import ProfilePage from './pages/ProfilePage'
-import assets from './assets/assets'
+// import assets from './assets/assets'
 import {Toaster} from "react-hot-toast"
 import { useContext } from 'react'
 import { AuthContext } from '../context/AuthContext'
