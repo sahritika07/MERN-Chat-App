@@ -45,7 +45,12 @@ io.on("connection", (socket)=>{
 // Middleware setup
 
 app.use(express.json({limit: "4mb"}));
-app.use(cors());
+
+
+app.use(cors({
+  origin: ["https://mern-chat-app-five-inky.vercel.app"],
+  credentials: true
+}));
 
 // Route Setup
 
@@ -59,10 +64,15 @@ app.use("/api/messages", messageRouter)
 
 await connectDB()
 
-if(process.env.NODE_ENV !== "production"){
-    const PORT = process.env.PORT || 5000;
-    server.listen(PORT, () => console.log("Server is running on PORT: " + PORT))
-}
+// if(process.env.NODE_ENV !== "production"){
+//     const PORT = process.env.PORT || 5000;
+//     server.listen(PORT, () => console.log("Server is running on PORT: " + PORT))
+// }
+
+
+const PORT = process.env.PORT || 5000;
+server.listen(PORT, () => console.log("Server is running on PORT: " + PORT));
+
 
 
 // for vercel
