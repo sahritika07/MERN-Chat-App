@@ -16,7 +16,7 @@ const server = http.createServer(app)   // Socket io supports http server
 
 
 export const io = new Server(server, {
-    cors: {origin: "https://mern-chat-app-omega-pink.vercel.app/"}
+    cors: {origin: "*"}
 })
 
 // Store Online Users
