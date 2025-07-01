@@ -5,65 +5,61 @@ import http from "http";
 import { connectDB } from "./lib/db.js";
 import userRouter from "./routes/userRoutes.js";
 import messageRouter from "./routes/messageRoutes.js";
-import {Server} from "socket.io";
+import { Server } from "socket.io";
 
 // Create Express app and HTTP server
-
 const app = express();
-const server = http.createServer(app)   // Socket io supports http server
+const server = http.createServer(app); // Socket.io supports HTTP server
 
-// Initializing socket.io server
+// ✅ Middleware setup
+app.use(cors({
+  origin: "*", // Replace with your frontend domain(s)
+  credentials: true
+}));
+app.use(express.json({ limit: "4mb" }));
 
-
+// ✅ Initialize socket.io with CORS config
 export const io = new Server(server, {
-    cors: {origin: "*"}
-})
+  cors: {
+    origin: ["http://localhost:5173", "https://mern-chat-app-five-inky.vercel.app/"], // Replace with your frontend domain(s)
+    methods: ["GET", "POST"],
+    credentials: true
+  }
+});
 
-// Store Online Users
+// ✅ Store Online Users
+export const userSocketMap = {}; // { userId: socketId }
 
-export const userSocketMap = {};  // {userId: socketId}
+// ✅ Socket.io connection handler
+io.on("connection", (socket) => {
+  const userId = socket.handshake.query.userId;
+  console.log("User connected", userId);
 
-// Socket.io connection handler
+  if (userId) userSocketMap[userId] = socket.id;
 
-io.on("connection", (socket)=>{
-   const userId = socket.handshake.query.userId;
-   console.log("User connected", userId);
+  // Emit online users to all connected clients
+  io.emit("getOnlineUsers", Object.keys(userSocketMap));
 
-   if(userId) userSocketMap[userId] = socket.id;
-
-   // Emit online users to all connected clients
-   io.emit("getOnlineUsers", Object.keys(userSocketMap));
-   socket.on("disconnect", () =>{
+  socket.on("disconnect", () => {
     console.log("User Disconnected", userId);
     delete userSocketMap[userId];
-    io.emit("getOnlineUsers", Object.keys(userSocketMap))
-   })
-})
+    io.emit("getOnlineUsers", Object.keys(userSocketMap));
+  });
+});
 
+// ✅ Route Setup
+app.use("/api/status", (req, res) => res.send("Server is live"));
+app.use("/api/auth", userRouter);
+app.use("/api/messages", messageRouter);
 
+// ✅ Connect to DB
+await connectDB();
 
-// Middleware setup
-
-app.use(express.json({limit: "4mb"}));
-app.use(cors());
-
-// Route Setup
-
-app.use("/api/status", (req,res) => res.send("Server is live"))
-
-app.use("/api/auth", userRouter)
-
-app.use("/api/messages", messageRouter)
-
-// Connect to DB
-
-await connectDB()
-
-if(process.env.NODE_ENV !== "production"){
-    const PORT = process.env.PORT || 5000;
-    server.listen(PORT, () => console.log("Server is running on PORT: " + PORT))
+// ✅ Start server
+if (process.env.NODE_ENV !== "production") {
+  const PORT = process.env.PORT || 5000;
+  server.listen(PORT, () => console.log("Server is running on PORT: " + PORT));
 }
 
-
-// for vercel
+// ✅ For Vercel
 export default server;
