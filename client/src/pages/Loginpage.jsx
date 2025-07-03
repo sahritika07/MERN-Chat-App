@@ -28,7 +28,7 @@ const Loginpage = () => {
   
   return (
     <div className='min-h-screen bg-cover bg-center flex items-center justify-center gap-8 sm:justify-evenly max-sm:flex-col backdrop-blur-2xl'>
-  <img src={assets.logo_big} alt="" className="w-[min(4vw, 24px)] h-auto object-contain" />
+   <img src={assets.logo_big} alt="" className="w-[350px] h-auto object-contain" />
 
       <form onSubmit={onSubmitHandler}  className="border-2 bg-white/8 text-white border-gray-500 p-6 flex flex-col gap-6 rounded-lg shadow-lg">
        <h2 className="font-medium text-2xl flex justify-between items-center"> {currState}
