@@ -13,14 +13,21 @@ const server = http.createServer(app); // Socket.io supports HTTP server
 
 // ✅ Middleware setup
 app.use(cors({
-  origin: "*", // Replace with your frontend domain(s)
+  origin: "*", // ✅ Allow all origins
   credentials: true
 }));
+
 app.use(express.json({ limit: "4mb" }));
 
-// ✅ Initialize socket.io with CORS config
-export const io = new Server(server
- );
+// ✅ Initialize socket.io with proper CORS configuration
+export const io = new Server(server, {
+  cors: {
+    origin: "*",        // ✅ Allow all origins
+    methods: ["GET", "POST"],
+    credentials: true   // ✅ Still allow credentials
+  }
+});
+
 
 // ✅ Store Online Users
 export const userSocketMap = {}; // { userId: socketId }
@@ -51,10 +58,10 @@ app.use("/api/messages", messageRouter);
 await connectDB();
 
 // ✅ Start server
-if (process.env.NODE_ENV !== "production") {
+// if (process.env.NODE_ENV !== "production") {
   const PORT = process.env.PORT || 5000;
   server.listen(PORT, () => console.log("Server is running on PORT: " + PORT));
-}
+// }
 
 // ✅ For Vercel
 export default server;

@@ -5,8 +5,12 @@ import {io} from "socket.io-client"
 import { useState } from "react";
 import { useEffect } from "react";
 
+
+
+
 const backendUrl = import.meta.env.VITE_BACKEND_URL
 axios.defaults.baseURL = backendUrl;
+console.log(backendUrl)
 
 export const AuthContext = createContext();
 

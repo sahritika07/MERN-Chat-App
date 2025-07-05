@@ -36,14 +36,15 @@ const ProfilePage = () => {
       <div className="w-5/6 max-w-2xl backdrop-blur-2xl text-gray-300 border-2 border-gray-600 flex  items-center justify-between max-sm:flex-col-reverse rounded-lg">
         <form onSubmit={handleSubmit} className="flex flex-col gap-5 p-10 flex-1">
           <h3 className="text-lg"> Profile details</h3>
-          <label htmlFor="avatar" className="flex items-center gap-3 cursor-pointer">
-            <img
-              src={selectedImg ? URL.createObjectURL(selectedImg) : assets.avatar_icon}
-              alt=""
-              className={`w-12 h-12 ${selectedImg && 'rounded-full'}`}
-            />
-            Upload profile image
-          </label>
+         <label htmlFor="avatar" className="flex items-center gap-3 cursor-pointer">
+  <img
+    src={selectedImg ? URL.createObjectURL(selectedImg) : assets.avatar_icon}
+    alt="avatar"
+    className="w-12 h-12 rounded-full object-cover aspect-square"
+  />
+  Upload profile image
+</label>
+
           <input
             id="avatar"
             type="file"
